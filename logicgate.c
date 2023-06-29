@@ -1,4 +1,5 @@
 #include <assert.h>
+#include <stdbool.h>
 #include <stdio.h>
 #include "logicgate.h"
 
@@ -12,6 +13,22 @@ struct logic_gate {
   logic_gate input1;
   logic_gate input2;
   logic_op op;
+};
+
+/**
+ * @brief Represents a logic input to a circuit
+ * 
+ */
+struct logic_input {
+  bool input;
+};
+
+/**
+ * @brief Represents a logic output from a circuit
+ * 
+ */
+struct logic_output {
+  logic_gate gate;
 };
 
 // Logic Operators
