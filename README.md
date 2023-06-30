@@ -2,7 +2,7 @@
 
 ## Inputs
 
-Inputs are specified in the form ```I# [1|0]```
+Inputs are specified in the form ```I# [1|0]``` (POSIX regex is ```(^I[0-9]+ [1|0]$)```)
 For example, ```I1 1``` is the first input, of value 1, and ```I2 0``` is the second input of value 0.
 
 To test a circuit on all possible combinations of inputs, inputs still need to be specified as ```I#```, but their value need not be defined.
@@ -19,7 +19,7 @@ The available gates to use are:
 - NOR
 - NAND
 
-Gates are specified in the form ```type# input1 input2```
+Gates are specified in the form ```type# input1 input2``` (POSIX regex to match the gate type is ```(^(AND|OR|NOT|XOR|NOR|NAND)[0-9]+ )```)
 
 For example, ```AND1 I1 I2``` is the first AND gate, taking inputs from the first and second inputs to the circuit.
 ```OR1 AND1 I3``` is the first OR gate, taking inputs from the first AND gate and third input.
@@ -29,7 +29,7 @@ NOT gates only have one input, so can be written as ```NOT# input1```.
 
 Logic gates defined earlier in the configuration file can be marked as circuit outputs.
 
-Outputs are specified in the form ```O# gate```
+Outputs are specified in the form ```O# gate``` (POSIX regex is ```(^O[0-9]+ (AND|OR|NOT|XOR|NOR|NAND)[0-9]+)```)
 
 For example, ```01 OR1``` marks the first OR gate as the first output of the circuit.
 
