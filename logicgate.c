@@ -3,46 +3,19 @@
 #include <stdio.h>
 #include "logicgate.h"
 
-typedef bool (*logic_op)(bool val1, bool val2);
-
-typedef struct gate_input *gate_input;
-
-typedef union {
-  logic_gate gate;
-  logic_input input;
-} gate_input_u;
-
-typedef enum { INPUT, GATE } gate_input_t;
-
-struct gate_input {
-  gate_input_u input_u;
-  gate_input_t input_t;
-}
-
 /**
  * @brief Represents a logic gate, with a logic operator function pointer
  * @note Single-input NOT gates will have the second input as NULL
+ * @note Circuit inputs will have NULL gate inputs and logic op, but will be immediately defined.
+ * All other gates will not be defined initially
  */
 struct logic_gate {
-  gate_input input1;
-  gate_input input2;
+  logic_gate input1;
+  logic_gate input2;
   logic_op op;
+  bool value;
+  bool defined;
 };
-
-/**
- * @brief Represents a logic input to a circuit
- * 
- */
-struct logic_input {
-  bool input;
-};
-
-logic_input create_input(bool value) {
-  logic_input input = malloc(sizeof(struct logic_input));
-  assert(input != NULL);
-  input->input = value;
-  return input;
-}
 
 /**
  * @brief Represents a logic output from a circuit
@@ -51,6 +24,45 @@ logic_input create_input(bool value) {
 struct logic_output {
   logic_gate gate;
 };
+
+static logic_gate alloc_gate() {
+  logic_gate gate = malloc(sizeof(struct logic_gate));
+  assert(gate != NULL);
+  return gate;
+}
+
+/**
+ * @brief Create a gate object, with defined set to false
+ * 
+ * @param input1 
+ * @param input2 
+ * @param op 
+ * @return logic_gate 
+ */
+logic_gate create_gate(logic_gate input1, logic_gate input2, logic_op op) {
+  assert(input1 != NULL);
+  assert(input2 != NULL);
+  assert(op != NULL);
+  logic_gate gate = alloc_gate();
+  gate->input1 = input1;
+  gate->input2 = input2;
+  gate->op = op;
+  gate->defined = false;
+  return gate;
+}
+
+/**
+ * @brief Create a gate object for a circuit input, with a defined value
+ * 
+ * @param value 
+ * @return logic_gate 
+ */
+logic_gate create_input(bool value) {
+  logic_gate gate = alloc_gate();
+  gate->value = value;
+  gate->defined = true;
+  return gate;
+}
 
 // Logic Operators
 /**
