@@ -5,13 +5,27 @@
 
 typedef bool (*logic_op)(bool val1, bool val2);
 
+typedef struct gate_input *gate_input;
+
+typedef union {
+  logic_gate gate;
+  logic_input input;
+} gate_input_u;
+
+typedef enum { INPUT, GATE } gate_input_t;
+
+struct gate_input {
+  gate_input_u input_u;
+  gate_input_t input_t;
+}
+
 /**
  * @brief Represents a logic gate, with a logic operator function pointer
- * @note Single-input NOT gates will have the input duplicated for consistency
+ * @note Single-input NOT gates will have the second input as NULL
  */
 struct logic_gate {
-  logic_gate input1;
-  logic_gate input2;
+  gate_input input1;
+  gate_input input2;
   logic_op op;
 };
 
@@ -22,6 +36,13 @@ struct logic_gate {
 struct logic_input {
   bool input;
 };
+
+logic_input create_input(bool value) {
+  logic_input input = malloc(sizeof(struct logic_input));
+  assert(input != NULL);
+  input->input = value;
+  return input;
+}
 
 /**
  * @brief Represents a logic output from a circuit
@@ -63,10 +84,10 @@ bool or(bool val1, bool val2) {
  * @param val2 
  * @return true !val1
  * @return false !val2
- * @pre val1 == val2
+ * @pre val2 == NULL
  */
 bool not(bool val1, bool val2) {
-  assert(val1 == val2);
+  assert(val2 == NULL);
   return !val1;
 }
 
