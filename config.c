@@ -9,6 +9,7 @@
 #include "circuit.h"
 #include "config.h"
 #include "logicgate.h"
+#include "symboltable.h"
 #include "typedefs.h"
 
 /**
@@ -51,6 +52,14 @@ void free_line_buffer(char **lines) {
   free(lines);
 }
 
+/**
+ * @brief Wrapper for regex matching
+ * 
+ * @param str string to match
+ * @param regex_exp POSIX regex string
+ * @return true if matched
+ * @return false otherwise
+ */
 bool matches_regex(char *str, char *regex_exp) {
   regex_t regex;
   int ret = regcomp(&regex, regex_exp, REG_EXTENDED);
@@ -63,6 +72,19 @@ bool matches_regex(char *str, char *regex_exp) {
   return !ret;
 }
 
+logic_input *parse_inputs(char **lines, int num_inputs) {
+  logic_input *inputs = malloc(sizeof(logic_input) * num_inputs);
+  for (int i = 0; i < num_inputs; i++) {
+    char *line = lines[i];
+    char *label = strtok(line, " ");
+    char *val = strtok(NULL, " ");
+    assert(val != NULL);
+    int value = atoi(val);
+    inputs[i] = create_input(value);
+    add(inputs[i], label);
+  }
+  return inputs;
+}
 circuit read_config(char *filename, input_type itype) {
   FILE *file = fopen(filename, "r");
   assert(file != NULL);
@@ -89,6 +111,7 @@ circuit read_config(char *filename, input_type itype) {
   printf("Number of Lines: %d\n", line_num);
 
   // Iterate over and build inputs
+  logic_input *inputs = parse_inputs(lines, num_inputs);
   // Iterate over and build main gates
   // Iterate over and build outputs
   return NULL;

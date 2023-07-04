@@ -58,9 +58,9 @@ logic_gate create_gate(logic_gate input1, logic_gate input2, logic_op op) {
  * @brief Create a gate object for a circuit input, with a defined value
  * 
  * @param value 
- * @return logic_gate 
+ * @return logic_input
  */
-logic_gate create_input(bool value) {
+logic_input create_input(bool value) {
   logic_gate gate = alloc_gate();
   gate->value = value;
   gate->defined = true;
