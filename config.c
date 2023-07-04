@@ -120,6 +120,7 @@ logic_output *parse_outputs(char **lines, int num_outputs) {
   }
   return outputs;
 }
+
 circuit read_config(char *filename, input_type itype) {
   FILE *file = fopen(filename, "r");
   assert(file != NULL);

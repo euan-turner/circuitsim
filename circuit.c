@@ -26,13 +26,9 @@ struct circuit {
 circuit create_circuit(int num_inputs, logic_input *inputs, int num_outputs, logic_output *outputs) {
   circuit circ = malloc(sizeof(struct circuit));
   assert(circ != NULL);
-  circ->inputs = malloc(sizeof(logic_input) * num_inputs);
-  assert(circ->inputs != NULL);
-  memcpy(circ->inputs, inputs, sizeof(logic_input) * num_inputs);
+  circ->inputs = inputs;
   circ->num_inputs = num_inputs;
-  circ->outputs = malloc(sizeof(logic_output) * num_outputs);
-  assert(circ->outputs != NULL);
-  memcpy(circ->outputs, outputs, sizeof(logic_output) * num_outputs);
+  circ->outputs = outputs;
   circ->num_outputs = num_outputs;
   return circ;
 }
