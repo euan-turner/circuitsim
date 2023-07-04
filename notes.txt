@@ -1,2 +1,0 @@
-Will use a HashMap to store definitions of labels as gates
-The value will be a tagged union of input gates and logic gates

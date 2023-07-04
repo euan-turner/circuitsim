@@ -1,10 +1,11 @@
 #include <stdlib.h> 
+#include <string.h>
 #include "logicgate.h"
 
 struct circuit {
-  logic_input inputs;
+  logic_input *inputs;
   int num_inputs;
-  logic_output outputs;
+  logic_output *outputs;
   int num_outputs;
 }
 
@@ -12,17 +13,21 @@ struct circuit {
  * @brief Create a circuit object
  * 
  * @param num_inputs 
+ * @param inputs Base pointer to array of pointers to heap-allocated input gates
  * @param num_outputs 
+ * @param outputs Base pointer to array of pointers to heap-allocated output gates
  * @return circuit 
  */
-circuit create_circuit(int num_inputs, int num_outputs) {
+circuit create_circuit(int num_inputs, logic_input *inputs, int num_outputs, logic_output *outputs) {
   circuit circ = malloc(sizeof(struct circuit));
   assert(circ != NULL);
-  circ->inputs = malloc(sizeof(struct logic_input) * num_inputs);
+  circ->inputs = malloc(sizeof(logic_input) * num_inputs);
   assert(circ->inputs != NULL);
+  memcpy(circ->inputs, inputs, sizeof(logic_input) * num_inputs);
   circ->num_inputs = num_inputs;
-  circ->outputs = malloc(sizeof(struct logic_output) * num_outputs);
+  circ->outputs = malloc(sizeof(logic_output) * num_outputs);
   assert(circ->outputs != NULL);
+  memcpy(circ->outputs, outputs, sizeof(logic_output) * num_outputs);
   circ->num_outputs = num_outputs;
   return circ;
 }

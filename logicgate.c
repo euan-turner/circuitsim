@@ -64,6 +64,17 @@ logic_gate create_input(bool value) {
   return gate;
 }
 
+void free_gate(logic_gate gate) {
+  gate->input1 = NULL;
+  gate->input2 = NULL;
+  gate->op = NULL;
+  free(gate);
+}
+
+void free_input(logic_input input) {
+  free(gate);
+}
+
 // Logic Operators
 /**
  * @brief Performs logic-and
