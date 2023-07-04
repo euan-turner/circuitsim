@@ -1,5 +1,7 @@
 #include <assert.h>
 #include <ctype.h>
+#include <regex.h>
+#include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -30,6 +32,11 @@ void clean_line(char *line) {
   }
 }
 
+/**
+ * @brief Allocates a 2D array, along with 1D array of row pointers
+ * 
+ * @return char** 
+ */
 char **make_line_buffer() {
   char **lines = malloc(sizeof(char* ) * MAX_NUM_LINES);
   lines[0] = malloc(sizeof(char) * MAX_LINE_LENGTH * MAX_NUM_LINES);
@@ -44,6 +51,18 @@ void free_line_buffer(char **lines) {
   free(lines);
 }
 
+bool matches_regex(char *str, char *regex_exp) {
+  regex_t regex;
+  int ret = regcomp(&regex, regex_exp, REG_EXTENDED);
+  if (ret) {
+    fprintf(stderr, "Could not compile regex.\n");
+    return false;
+  }
+  ret = regexec(&regex, str, 0, NULL, 0);
+  regfree(&regex);
+  return !ret;
+}
+
 circuit read_config(char *filename, input_type itype) {
   FILE *file = fopen(filename, "r");
   assert(file != NULL);
@@ -54,16 +73,24 @@ circuit read_config(char *filename, input_type itype) {
   // Read in file and count number of inputs/outputs
   while (fgets(lines[line_num], MAX_LINE_LENGTH, file) != NULL) {
     // EOF not reached
-    clean_line(lines[line_num]);
+    char *line = lines[line_num];
+    clean_line(line);
     // Improve to use REGEX
-    if (lines[line_num][0] == 'I') {
+    if (matches_regex(line, "(^I[0-9]+ [1|0]$)")) {
       num_inputs++;
-    } else if ((lines[line_num][0] == 'O') && (lines[line_num][1] != 'R')) {
+    } else if (matches_regex(line, "(^O[0-9]+ (AND|OR|NOT|XOR|NOR|NAND)[0-9]+)")) {
       num_outputs++;
     }
     line_num++;
   }
   fclose(file);
+  printf("Number of Inputs: %d\n", num_inputs);
+  printf("Number of Outputs: %d\n", num_outputs);
+  printf("Number of Lines: %d\n", line_num);
+
+  // Iterate over and build inputs
+  // Iterate over and build main gates
+  // Iterate over and build outputs
   return NULL;
 }
 
