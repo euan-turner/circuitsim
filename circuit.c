@@ -1,5 +1,8 @@
+#include <assert.h>
+#include <stdio.h>
 #include <stdlib.h> 
 #include <string.h>
+#include "circuit.h"
 #include "logicgate.h"
 
 struct circuit {
@@ -7,7 +10,7 @@ struct circuit {
   int num_inputs;
   logic_output *outputs;
   int num_outputs;
-}
+};
 
 /**
  * @brief Create a circuit object
@@ -41,4 +44,9 @@ void free_circuit(circuit circ) {
   free(circ->inputs);
   free(circ->outputs);
   free(circ);
+}
+
+int main(void) {
+  printf("Main\n");
+  return 0;
 }

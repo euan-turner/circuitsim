@@ -149,8 +149,3 @@ bool nor(bool val1, bool val2) {
 bool nand(bool val1, bool val2) {
   return !and(val1, val2);
 }
-
-int main(void) {
-  printf("Main\n");
-  return 0;
-}

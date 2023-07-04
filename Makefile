@@ -1,10 +1,12 @@
 CC	= gcc
 CFLAGS	= -Wall -g
-BUILD = logicgate
+BUILD = circuit
 
 all: $(BUILD)
 
 clean:
 	/bin/rm -f *.o $(BUILD)
-	
-logicgate: logicgate.o
+
+circuit: circuit.o
+
+circuit.o: logicgate.h	
