@@ -47,8 +47,3 @@ void free_circuit(circuit circ) {
   free(circ->outputs);
   free(circ);
 }
-
-int main(void) {
-  printf("Main\n");
-  return 0;
-}

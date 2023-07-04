@@ -1,3 +1,6 @@
+#ifndef LOGICGATE_H
+#define LOGICGATE_H
+
 #include <stdbool.h>
 
 #include "typedefs.h"
@@ -12,3 +15,5 @@ logic_gate create_input(bool value);
 void free_gate(logic_gate gate);
 
 void free_input(logic_input input);
+
+#endif /* LOGICGATE_H */

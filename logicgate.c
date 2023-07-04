@@ -1,6 +1,7 @@
 #include <assert.h>
 #include <stdbool.h>
 #include <stdio.h>
+#include <stdlib.h>
 
 #include "logicgate.h"
 #include "typedefs.h"
@@ -74,7 +75,7 @@ void free_gate(logic_gate gate) {
 }
 
 void free_input(logic_input input) {
-  free(gate);
+  free(input);
 }
 
 // Logic Operators
@@ -112,7 +113,7 @@ bool or(bool val1, bool val2) {
  * @pre val2 == NULL
  */
 bool not(bool val1, bool val2) {
-  assert(val2 == NULL);
+  assert(val2 == val1);
   return !val1;
 }
 
