@@ -6,6 +6,7 @@
 #include "circuit.h"
 #include "config.h"
 #include "logicgate.h"
+#include "typedefs.h"
 
 /**
  * @brief Removes whitespace from the line. If the line just contains a newline,

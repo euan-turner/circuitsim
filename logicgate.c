@@ -1,7 +1,9 @@
 #include <assert.h>
 #include <stdbool.h>
 #include <stdio.h>
+
 #include "logicgate.h"
+#include "typedefs.h"
 
 /**
  * @brief Represents a logic gate, with a logic operator function pointer

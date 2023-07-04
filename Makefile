@@ -9,4 +9,6 @@ clean:
 
 circuit: circuit.o
 
-circuit.o: logicgate.h	
+circuit.o: logicgate.h typedefs.h
+
+logicgate.o:	typedefs.h
