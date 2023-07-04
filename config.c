@@ -116,7 +116,7 @@ logic_output *parse_outputs(char **lines, int num_outputs) {
     char *gate_label = strtok(NULL, " ");
     logic_gate gate = lookup(gate_label);
     outputs[i] = create_output(gate);
-    add(outputs[i], label);
+    add_output(outputs[i], label);
   }
   return outputs;
 }

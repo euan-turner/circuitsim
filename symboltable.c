@@ -9,10 +9,13 @@
 #define HASHSIZE 51
 
 typedef struct symbol_entry *symbol_entry;
+typedef enum { GATE, OUTPUT } type;
+typedef union { logic_gate gate; logic_output output; } entry;
 struct symbol_entry {
   symbol_entry next;
   char *label;
-  logic_gate gate;
+  entry e;
+  type t;
 };
 
 symbol_entry SYMTAB[HASHSIZE];
@@ -29,7 +32,8 @@ logic_gate lookup(char *label) {
   symbol_entry se;
   for (se = SYMTAB[hash(label)]; se != NULL; se = se->next) {
     if (strcmp(label, se->label) == 0) {
-      return se->gate;
+      assert(se->t == GATE);
+      return se->e.gate;
     }
   }
   return NULL;
@@ -43,7 +47,31 @@ void add(logic_gate gate, char *label) {
   assert(se->label != NULL);
   uint64_t h = hash(label);
   se->next = SYMTAB[h];
-  se->gate = gate;
+  se->t = GATE;
+  se->e.gate = gate;
+  SYMTAB[h] = se;
+}
+
+logic_output lookup_output(char *label) {
+  symbol_entry se;
+  for (se = SYMTAB[hash(label)]; se != NULL; se = se->next) {
+    if (strcmp(label, se->label) == 0) {
+      assert(se->t == OUTPUT);
+      return se->e.output;
+    }
+  }
+  return NULL;
+}
+void add_output(logic_output output, char *label){
+  assert(lookup_output(label) == NULL);
+  symbol_entry se = malloc(sizeof(struct symbol_entry));
+  assert(se != NULL);
+  se->label = strdup(label);
+  assert(se->label != NULL);
+  uint64_t h = hash(label);
+  se->next = SYMTAB[h];
+  se->t = OUTPUT;
+  se->e.output = output;
   SYMTAB[h] = se;
 }
 
@@ -52,7 +80,11 @@ void free_symbol_entry(symbol_entry se) {
   if (se != NULL) {
     free(se->next);
     free(se->label);
-    se->gate = NULL;
+    if (se->t == GATE) {
+      se->e.gate = NULL;
+    } else {
+      se->e.output = NULL;
+    }
     free(se);
   }
 }
