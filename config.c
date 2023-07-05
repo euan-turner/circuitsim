@@ -81,7 +81,7 @@ logic_input *parse_inputs(char **lines, int num_inputs) {
     char *label = strtok(line, " ");
     char *val = strtok(NULL, " ");
     int value = atoi(val);
-    inputs[i] = create_input(value);
+    inputs[i] = create_input(value, label);
     add(inputs[i], label);
   }
   return inputs;
@@ -105,7 +105,7 @@ void parse_gates(char **lines, int num_gates) {
     for (char *s = op + strlen(op) - 1; isdigit(*s); s--) {
       *s = '\0';
     }
-    logic_gate gate = create_gate(i1, i2, match_op(op));
+    logic_gate gate = create_gate(i1, i2, match_op(op), label);
     add(gate, label);
   }
 }
@@ -117,8 +117,7 @@ logic_output *parse_outputs(char **lines, int num_outputs) {
     char *label = strtok(line, " ");
     char *gate_label = strtok(NULL, " ");
     logic_gate gate = lookup(gate_label);
-    outputs[i] = create_output(gate);
-    add_output(outputs[i], label);
+    outputs[i] = create_output(gate, label);
   }
   return outputs;
 }
@@ -156,6 +155,7 @@ circuit read_config(char *filename, input_type itype) {
   // Iterate over and build outputs
   logic_output *outputs = parse_outputs(lines + line_num - num_outputs, num_outputs);
   circuit circ = create_circuit(num_inputs, inputs, num_outputs, outputs);
+  free_line_buffer(lines);
   return circ;
 }
 
