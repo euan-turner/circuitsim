@@ -7,7 +7,13 @@
 
 int main(void) {
   printf("Main\n");
-  read_config("./examples/mx.txt", GIVEN);
+  circuit circ = read_config("./examples/mx.txt", GIVEN);
   printf("Read Complete\n");
+  for (int i = 0; i < circ->num_inputs; i++) {
+    printf("Input: %s\n", circ->inputs[i]->label);
+  }
+  for (int i = 0; i < circ->num_outputs; i++) {
+    printf("Output: %s\n", circ->outputs[i]->label);
+  }
   return 0;
 }
