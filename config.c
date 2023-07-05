@@ -40,9 +40,11 @@ void clean_line(char *line) {
  */
 char **make_line_buffer() {
   char **lines = malloc(sizeof(char* ) * MAX_NUM_LINES);
+  assert(lines != NULL);
   lines[0] = malloc(sizeof(char) * MAX_LINE_LENGTH * MAX_NUM_LINES);
+  assert(lines[0] != NULL);
   for (int i = 1; i < MAX_NUM_LINES; i++) {
-    lines[i] = lines[i - 1] + 1;
+    lines[i] = lines[i - 1] + MAX_LINE_LENGTH;
   }
   return lines;
 }
@@ -124,7 +126,8 @@ logic_output *parse_outputs(char **lines, int num_outputs) {
 circuit read_config(char *filename, input_type itype) {
   FILE *file = fopen(filename, "r");
   assert(file != NULL);
-  char **lines = make_line_buffer();
+  char **lines = make_line_buffer(); // Buffer not being used properly
+  // Indexing is into characters, not lines
   int line_num = 0;
   int num_inputs = 0;
   int num_outputs = 0;
