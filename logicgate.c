@@ -7,43 +7,13 @@
 #include "logicgate.h"
 #include "typedefs.h"
 
-/**
- * @brief Represents a logic gate, with a logic operator function pointer
- * @note Single-input NOT gates will have the second input as NULL
- * @note Circuit inputs will have NULL gate inputs and logic op, but will be immediately defined.
- * All other gates will not be defined initially
- */
-struct logic_gate {
-  logic_gate input1;
-  logic_gate input2;
-  logic_op op;
-  bool value;
-  bool defined;
-};
-
-/**
- * @brief Represents a logic output from a circuit
- * 
- */
-struct logic_output {
-  logic_gate gate;
-};
-
 static logic_gate alloc_gate() {
   logic_gate gate = malloc(sizeof(struct logic_gate));
   assert(gate != NULL);
   return gate;
 }
 
-/**
- * @brief Create a gate object, with defined set to false
- * 
- * @param input1 
- * @param input2 
- * @param op 
- * @return logic_gate 
- */
-logic_gate create_gate(logic_gate input1, logic_gate input2, logic_op op) {
+logic_gate create_gate(logic_gate input1, logic_gate input2, logic_op op, char *label) {
   assert(input1 != NULL);
   assert(input2 != NULL);
   assert(op != NULL);
@@ -52,26 +22,26 @@ logic_gate create_gate(logic_gate input1, logic_gate input2, logic_op op) {
   gate->input2 = input2;
   gate->op = op;
   gate->defined = false;
+  gate->label = strdup(label);
+  assert(gate->label != NULL);
   return gate;
 }
 
-/**
- * @brief Create a gate object for a circuit input, with a defined value
- * 
- * @param value 
- * @return logic_input
- */
-logic_input create_input(bool value) {
+logic_input create_input(bool value, char *label) {
   logic_gate gate = alloc_gate();
   gate->value = value;
   gate->defined = true;
+  gate->label = strdup(label);
+  assert(gate->label != NULL);
   return gate;
 }
 
-logic_output create_output(logic_gate gate) {
+logic_output create_output(logic_gate gate, char *label) {
   logic_output output = malloc(sizeof(struct logic_output));
   assert(output != NULL);
   output->gate = gate;
+  output->label = strdup(label);
+  assert(output->label != NULL);
   return output;
 }
 
@@ -79,15 +49,18 @@ void free_gate(logic_gate gate) {
   gate->input1 = NULL;
   gate->input2 = NULL;
   gate->op = NULL;
+  free(gate->label);
   free(gate);
 }
 
 void free_input(logic_input input) {
+  free(input->label);
   free(input);
 }
 
 void free_output(logic_output output) {
   output->gate = NULL;
+  free(output->label);
   free(output);
 }
 

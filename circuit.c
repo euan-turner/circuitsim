@@ -7,13 +7,6 @@
 #include "logicgate.h"
 #include "typedefs.h"
 
-struct circuit {
-  logic_input *inputs;
-  int num_inputs;
-  logic_output *outputs;
-  int num_outputs;
-};
-
 /**
  * @brief Create a circuit object
  * 

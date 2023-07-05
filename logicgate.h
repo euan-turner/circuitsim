@@ -5,16 +5,13 @@
 
 #include "typedefs.h"
 
-
-typedef bool (*logic_op)(bool val1, bool val2);
-
 logic_op match_op(char *op);
 
-logic_gate create_gate(logic_gate input1, logic_gate input2, logic_op op);
+logic_gate create_gate(logic_gate input1, logic_gate input2, logic_op op, char *label);
 
-logic_input create_input(bool value);
+logic_input create_input(bool value, char *label);
 
-logic_output create_output(logic_gate gate);
+logic_output create_output(logic_gate gate, char *label);
 
 void free_gate(logic_gate gate);
 
