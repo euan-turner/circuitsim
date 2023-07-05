@@ -49,6 +49,11 @@ char **make_line_buffer() {
   return lines;
 }
 
+/**
+ * @brief Frees memory associated with 2-D line buffer
+ * 
+ * @param lines 
+ */
 void free_line_buffer(char **lines) {
   free(lines[0]);
   free(lines);
@@ -74,7 +79,14 @@ bool matches_regex(char *str, char *regex_exp) {
   return !ret;
 }
 
-logic_input *parse_inputs(char **lines, int num_inputs) {
+/**
+ * @brief Parses input gates
+ * 
+ * @param lines 
+ * @param num_inputs 
+ * @return logic_input* Array of logic_input gates
+ */
+static logic_input *parse_inputs(char **lines, int num_inputs) {
   logic_input *inputs = malloc(sizeof(logic_input) * num_inputs);
   for (int i = 0; i < num_inputs; i++) {
     char *line = lines[i];
@@ -87,7 +99,14 @@ logic_input *parse_inputs(char **lines, int num_inputs) {
   return inputs;
 }
 
-void parse_gates(char **lines, int num_gates) {
+/**
+ * @brief Parses regular logic gates
+ * 
+ * @param lines 
+ * @param num_gates 
+ * @pre All required input gates already defined
+ */
+static void parse_gates(char **lines, int num_gates) {
   for (int i = 0; i < num_gates; i++) {
     char *line = lines[i];
     char *label = strtok(line, " ");
@@ -110,7 +129,14 @@ void parse_gates(char **lines, int num_gates) {
   }
 }
 
-logic_output *parse_outputs(char **lines, int num_outputs) {
+/**
+ * @brief Parses output gates
+ * 
+ * @param lines 
+ * @param num_outputs 
+ * @return logic_output* 
+ */
+static logic_output *parse_outputs(char **lines, int num_outputs) {
   logic_output *outputs = malloc(sizeof(logic_output) * num_outputs);
   for (int i = 0; i < num_outputs; i++) {
     char *line = lines[i];
@@ -122,10 +148,17 @@ logic_output *parse_outputs(char **lines, int num_outputs) {
   return outputs;
 }
 
+/**
+ * @brief Builds a circuit from a config file
+ * 
+ * @param filename Path to config file
+ * @param itype GIVEN if inputs defined, ALL if inputs undefined
+ * @return circuit 
+ */
 circuit read_config(char *filename, input_type itype) {
   FILE *file = fopen(filename, "r");
   assert(file != NULL);
-  char **lines = make_line_buffer(); // Buffer not being used properly
+  char **lines = make_line_buffer();
   // Indexing is into characters, not lines
   int line_num = 0;
   int num_inputs = 0;
@@ -144,16 +177,11 @@ circuit read_config(char *filename, input_type itype) {
     line_num++;
   }
   fclose(file);
-  printf("Number of Inputs: %d\n", num_inputs);
-  printf("Number of Outputs: %d\n", num_outputs);
-  printf("Number of Lines: %d\n", line_num);
 
-  // Iterate over and build inputs
   logic_input *inputs = parse_inputs(lines, num_inputs);
-  // Iterate over and build main gates
   parse_gates(lines + num_inputs, line_num - num_inputs - num_outputs);
-  // Iterate over and build outputs
   logic_output *outputs = parse_outputs(lines + line_num - num_outputs, num_outputs);
+
   circuit circ = create_circuit(num_inputs, inputs, num_outputs, outputs);
   free_line_buffer(lines);
   return circ;

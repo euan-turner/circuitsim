@@ -7,12 +7,26 @@
 #include "logicgate.h"
 #include "typedefs.h"
 
+/**
+ * @brief Allocates and checks pointer for a logic_gate
+ * 
+ * @return logic_gate 
+ */
 static logic_gate alloc_gate() {
   logic_gate gate = malloc(sizeof(struct logic_gate));
   assert(gate != NULL);
   return gate;
 }
 
+/**
+ * @brief Create a gate object
+ * 
+ * @param input1 
+ * @param input2 
+ * @param op 
+ * @param label 
+ * @return logic_gate 
+ */
 logic_gate create_gate(logic_gate input1, logic_gate input2, logic_op op, char *label) {
   assert(input1 != NULL);
   assert(input2 != NULL);
@@ -27,6 +41,13 @@ logic_gate create_gate(logic_gate input1, logic_gate input2, logic_op op, char *
   return gate;
 }
 
+/**
+ * @brief Create an input object
+ * 
+ * @param value 
+ * @param label 
+ * @return logic_input 
+ */
 logic_input create_input(bool value, char *label) {
   logic_gate gate = alloc_gate();
   gate->value = value;
@@ -36,6 +57,13 @@ logic_input create_input(bool value, char *label) {
   return gate;
 }
 
+/**
+ * @brief Create an output object
+ * 
+ * @param gate 
+ * @param label 
+ * @return logic_output 
+ */
 logic_output create_output(logic_gate gate, char *label) {
   logic_output output = malloc(sizeof(struct logic_output));
   assert(output != NULL);
@@ -45,6 +73,11 @@ logic_output create_output(logic_gate gate, char *label) {
   return output;
 }
 
+/**
+ * @brief Frees a logic_gate
+ * 
+ * @param gate 
+ */
 void free_gate(logic_gate gate) {
   gate->input1 = NULL;
   gate->input2 = NULL;
@@ -53,11 +86,23 @@ void free_gate(logic_gate gate) {
   free(gate);
 }
 
+/**
+ * @brief Frees an input
+ * 
+ * @param input 
+ * @note May be redundant, free_gate likely sufficient
+ */
 void free_input(logic_input input) {
   free(input->label);
   free(input);
 }
 
+/**
+ * @brief Frees an output
+ * 
+ * @param output 
+ * @note Does not currently free gate as well
+ */
 void free_output(logic_output output) {
   output->gate = NULL;
   free(output->label);

@@ -20,6 +20,12 @@ struct symbol_entry {
 
 symbol_entry SYMTAB[HASHSIZE];
 
+/**
+ * @brief Hashes a key for the symbol table
+ * 
+ * @param s 
+ * @return uint64_t 
+ */
 static uint64_t hash(char *s) {
   uint64_t hash;
   for (hash = 0; *s != '\0'; s++) {
@@ -28,6 +34,12 @@ static uint64_t hash(char *s) {
   return hash % HASHSIZE;
 }
 
+/**
+ * @brief Looks up an entry in the symbol table
+ * 
+ * @param label 
+ * @return logic_gate 
+ */
 logic_gate lookup(char *label) {
   symbol_entry se;
   for (se = SYMTAB[hash(label)]; se != NULL; se = se->next) {
@@ -39,6 +51,12 @@ logic_gate lookup(char *label) {
   return NULL;
 }
 
+/**
+ * @brief Adds an entry to the symbol table
+ * 
+ * @param gate 
+ * @param label 
+ */
 void add(logic_gate gate, char *label) {
   assert(lookup(label) == NULL);
   symbol_entry se = malloc(sizeof(struct symbol_entry));
@@ -52,7 +70,12 @@ void add(logic_gate gate, char *label) {
   SYMTAB[h] = se;
 }
 
-void free_symbol_entry(symbol_entry se) {
+/**
+ * @brief Frees a single symbol table entry
+ * 
+ * @param se 
+ */
+static void free_symbol_entry(symbol_entry se) {
   if (se != NULL) {
     free(se->next);
     free(se->label);
@@ -64,6 +87,7 @@ void free_symbol_entry(symbol_entry se) {
     free(se);
   }
 }
+
 /**
  * @brief Frees memory allocated for symbol table
  * @note Does not free logic gates as these will be reused
