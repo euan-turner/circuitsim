@@ -115,17 +115,6 @@ void free_gate(logic_gate gate) {
 }
 
 /**
- * @brief Frees an input
- * 
- * @param input 
- * @note May be redundant, free_gate likely sufficient
- */
-void free_input(logic_input input) {
-  free(input->label);
-  free(input);
-}
-
-/**
  * @brief Frees an output
  * 
  * @param output 

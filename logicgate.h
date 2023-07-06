@@ -15,8 +15,6 @@ logic_output create_output(logic_gate gate, char *label);
 
 void free_gate(logic_gate gate);
 
-void free_input(logic_input input);
-
 void free_output(logic_output output);
 
 #endif /* LOGICGATE_H */
