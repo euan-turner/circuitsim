@@ -12,6 +12,9 @@
 #include "symboltable.h"
 #include "typedefs.h"
 
+#define INPUT_REGEX "(^I[0-9]+ [1|0]$)"
+#define OUTPUT_REGEX "(^O[0-9]+ (AND|OR|NOT|XOR|NOR|NAND)[0-9]+)"
+
 /**
  * @brief Removes leading and trailing whitespace from a string in place
  * 
@@ -25,7 +28,6 @@ void clean_line(char *line) {
     num_leading++;
   }
   memmove(line, line + num_leading, sizeof(char) * (strlen(line) - num_leading));
-  // strcpy(line, line + num_leading); // use memmov instead
   // Remove trailing whitespace
   char *end = line + strlen(line) - 1;
   while (isspace(*end)) {
@@ -93,8 +95,7 @@ static logic_input *parse_inputs(char **lines, int num_inputs) {
     char *line = lines[i];
     char *label = strtok(line, " ");
     char *val = strtok(NULL, " ");
-    int value = atoi(val);
-    inputs[i] = create_input(value, label);
+    inputs[i] = create_input(atoi(val), label);
     add(inputs[i], label);
   }
   return inputs;
@@ -113,9 +114,11 @@ static void parse_gates(char **lines, int num_gates) {
     char *label = strtok(line, " ");
     char *input1 = strtok(NULL, " ");
     char *input2 = strtok(NULL, " ");
+
     logic_gate i1 = lookup(input1);
     assert(i1 != NULL); // No forward referencing
     i1->fan_out++;
+
     logic_gate i2;
     if (input2 == NULL) {
       // Case of NOT gate - duplicate input
@@ -177,9 +180,9 @@ circuit read_config(char *filename, input_type itype) {
     char *line = lines[line_num];
     clean_line(line);
     // Improve to use REGEX
-    if (matches_regex(line, "(^I[0-9]+ [1|0]$)")) {
+    if (matches_regex(line, INPUT_REGEX)) {
       num_inputs++;
-    } else if (matches_regex(line, "(^O[0-9]+ (AND|OR|NOT|XOR|NOR|NAND)[0-9]+)")) {
+    } else if (matches_regex(line, OUTPUT_REGEX)) {
       num_outputs++;
     }
     line_num++;
@@ -191,6 +194,7 @@ circuit read_config(char *filename, input_type itype) {
   logic_output *outputs = parse_outputs(lines + line_num - num_outputs, num_outputs);
 
   circuit circ = create_circuit(num_inputs, inputs, num_outputs, outputs);
+  
   free_line_buffer(lines);
   free_symbol_table();
   return circ;
