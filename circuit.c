@@ -32,6 +32,9 @@ circuit create_circuit(int num_inputs, logic_input *inputs, int num_outputs, log
  * @param circ 
  */
 void free_circuit(circuit circ) {
+  for (int i = 0; i < circ->num_outputs; i++) {
+    free_output(circ->outputs[i]);
+  }
   free(circ->inputs);
   free(circ->outputs);
   free(circ);

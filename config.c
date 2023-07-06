@@ -24,7 +24,8 @@ void clean_line(char *line) {
   while (isspace(*line)) {
     num_leading++;
   }
-  strcpy(line, line + num_leading);
+  memmove(line, line + num_leading, sizeof(char) * (strlen(line) - num_leading));
+  // strcpy(line, line + num_leading); // use memmov instead
   // Remove trailing whitespace
   char *end = line + strlen(line) - 1;
   while (isspace(*end)) {
@@ -125,6 +126,7 @@ static void parse_gates(char **lines, int num_gates) {
       *s = '\0';
     }
     logic_gate gate = create_gate(i1, i2, match_op(op), label);
+    free(op);
     add(gate, label);
   }
 }
@@ -184,6 +186,7 @@ circuit read_config(char *filename, input_type itype) {
 
   circuit circ = create_circuit(num_inputs, inputs, num_outputs, outputs);
   free_line_buffer(lines);
+  free_symbol_table();
   return circ;
 }
 

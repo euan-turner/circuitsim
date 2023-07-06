@@ -20,5 +20,6 @@ int main(void) {
   for (int i = 0; i < circ->num_outputs; i++) {
     printf("%s: %s\n", circ->outputs[i]->label, circ->outputs[i]->gate->value ? "TRUE" : "FALSE");
   }
+  free_circuit(circ);
   return 0;
 }

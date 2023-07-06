@@ -50,6 +50,9 @@ logic_gate create_gate(logic_gate input1, logic_gate input2, logic_op op, char *
  */
 logic_input create_input(bool value, char *label) {
   logic_gate gate = alloc_gate();
+  gate->input1 = NULL;
+  gate->input2 = NULL;
+  gate->op = NULL;
   gate->value = value;
   gate->defined = true;
   gate->label = strdup(label);
@@ -79,8 +82,17 @@ logic_output create_output(logic_gate gate, char *label) {
  * @param gate 
  */
 void free_gate(logic_gate gate) {
-  gate->input1 = NULL;
-  gate->input2 = NULL;
+  if (gate->input1 != NULL) {
+    free_gate(gate->input1);
+    if (gate->input1 == gate->input2) {
+      gate->input2 = NULL; // deal with case of NOT
+    } // need to deal with issue of gate already being freed by some other parent gate
+    gate->input1 = NULL;
+  }
+  if (gate->input2 != NULL) {
+    free_gate(gate->input2);
+    gate->input2 = NULL;
+  }
   gate->op = NULL;
   free(gate->label);
   free(gate);
@@ -101,10 +113,12 @@ void free_input(logic_input input) {
  * @brief Frees an output
  * 
  * @param output 
- * @note Does not currently free gate as well
  */
 void free_output(logic_output output) {
-  output->gate = NULL;
+  if (output->gate != NULL) {
+    free_gate(output->gate);
+    output->gate = NULL;
+  }
   free(output->label);
   free(output);
 }

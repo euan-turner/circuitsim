@@ -77,7 +77,7 @@ void add(logic_gate gate, char *label) {
  */
 static void free_symbol_entry(symbol_entry se) {
   if (se != NULL) {
-    free(se->next);
+    free_symbol_entry(se->next);
     free(se->label);
     if (se->t == GATE) {
       se->e.gate = NULL;
