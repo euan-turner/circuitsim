@@ -90,25 +90,29 @@ logic_output create_output(logic_gate gate, char *label) {
 }
 
 /**
- * @brief Frees a logic_gate
+ * @brief Frees a logic_gate, and recursively frees input logic gates
  * 
  * @param gate 
  */
 void free_gate(logic_gate gate) {
   if (gate->input1 != NULL) {
     free_gate(gate->input1);
+
     if (gate->input1 == gate->input2) {
       gate->input2 = NULL; // deal with case of NOT
     }
     gate->input1 = NULL;
   }
+
   if (gate->input2 != NULL) {
     free_gate(gate->input2);
     gate->input2 = NULL;
   }
-  gate->op = NULL;
+
   gate->fan_out--;
   if (gate->fan_out == 0) {
+    // No more references to gate remain
+    gate->op = NULL;
     free(gate->label);
     free(gate);
   }

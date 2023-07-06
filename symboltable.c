@@ -9,8 +9,11 @@
 #define HASHSIZE 51
 
 typedef struct symbol_entry *symbol_entry;
+
 typedef enum { GATE, OUTPUT } type;
+
 typedef union { logic_gate gate; logic_output output; } entry;
+
 struct symbol_entry {
   symbol_entry next;
   char *label;

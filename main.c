@@ -7,19 +7,20 @@
 #include "typedefs.h"
 
 int main(void) {
-  printf("Main\n");
   circuit circ = read_config("./examples/mx.txt", GIVEN);
   printf("Read Complete\n");
+  printf("Inputs:\n");
   for (int i = 0; i < circ->num_inputs; i++) {
-    printf("Input: %s\n", circ->inputs[i]->label);
+    printf("%s - %s\n", circ->inputs[i]->label, circ->inputs[i]->value ? "TRUE" : "FALSE");
   }
-  for (int i = 0; i < circ->num_outputs; i++) {
-    printf("Output: %s\n", circ->outputs[i]->label);
-  }
+
   eval_circuit(circ);
+
+  printf("Outputs:\n");
   for (int i = 0; i < circ->num_outputs; i++) {
-    printf("%s: %s\n", circ->outputs[i]->label, circ->outputs[i]->gate->value ? "TRUE" : "FALSE");
+    printf("%s - %s\n", circ->outputs[i]->label, circ->outputs[i]->gate->value ? "TRUE" : "FALSE");
   }
+
   free_circuit(circ);
   return 0;
 }
