@@ -37,10 +37,11 @@ logic_gate create_gate(logic_gate input1, logic_gate input2, logic_op op, char *
   gate->op = op;
   gate->defined = false;
   gate->label = strdup(label);
+  gate->fan_out = 0;
   assert(gate->label != NULL);
   return gate;
 }
-
+// remove duplication
 /**
  * @brief Create an input object
  * 
@@ -56,6 +57,7 @@ logic_input create_input(bool value, char *label) {
   gate->value = value;
   gate->defined = true;
   gate->label = strdup(label);
+  gate->fan_out = 0;
   assert(gate->label != NULL);
   return gate;
 }
@@ -86,7 +88,7 @@ void free_gate(logic_gate gate) {
     free_gate(gate->input1);
     if (gate->input1 == gate->input2) {
       gate->input2 = NULL; // deal with case of NOT
-    } // need to deal with issue of gate already being freed by some other parent gate
+    }
     gate->input1 = NULL;
   }
   if (gate->input2 != NULL) {
@@ -94,8 +96,11 @@ void free_gate(logic_gate gate) {
     gate->input2 = NULL;
   }
   gate->op = NULL;
-  free(gate->label);
-  free(gate);
+  gate->fan_out--;
+  if (gate->fan_out == 0) {
+    free(gate->label);
+    free(gate);
+  }
 }
 
 /**

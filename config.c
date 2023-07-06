@@ -113,14 +113,19 @@ static void parse_gates(char **lines, int num_gates) {
     char *label = strtok(line, " ");
     char *input1 = strtok(NULL, " ");
     char *input2 = strtok(NULL, " ");
-    if (input2 == NULL) {
-      // Case of NOT gate with only 1 input
-      input2 = input1;
-    }
     logic_gate i1 = lookup(input1);
     assert(i1 != NULL); // No forward referencing
-    logic_gate i2 = lookup(input2);
-    assert(i2 != NULL);
+    i1->fan_out++;
+    logic_gate i2;
+    if (input2 == NULL) {
+      // Case of NOT gate - duplicate input
+      i2 = i1;
+    } else {
+      i2 = lookup(input2);
+      assert(i2 != NULL);
+      i2->fan_out++;
+    }
+    
     char *op = strdup(label);
     for (char *s = op + strlen(op) - 1; isdigit(*s); s--) {
       *s = '\0';
@@ -145,6 +150,7 @@ static logic_output *parse_outputs(char **lines, int num_outputs) {
     char *label = strtok(line, " ");
     char *gate_label = strtok(NULL, " ");
     logic_gate gate = lookup(gate_label);
+    gate->fan_out++;
     outputs[i] = create_output(gate, label);
   }
   return outputs;

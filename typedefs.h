@@ -14,6 +14,7 @@ struct logic_gate {
   bool value;
   bool defined;
   char *label;
+  int fan_out;
 };
 
 typedef struct logic_output *logic_output;
