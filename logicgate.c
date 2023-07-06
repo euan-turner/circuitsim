@@ -19,6 +19,30 @@ static logic_gate alloc_gate() {
 }
 
 /**
+ * @brief Full template constructor for a logic gate
+ * 
+ * @param input1 
+ * @param input2 
+ * @param op 
+ * @param value 
+ * @param defined 
+ * @param label 
+ * @param fan_out 
+ * @return logic_gate 
+ */
+static logic_gate make_gate(logic_gate input1, logic_gate input2, logic_op op, bool value, bool defined, char *label, int fan_out) {
+  logic_gate gate = alloc_gate();
+  gate->input1 = input1;
+  gate->input2 = input2;
+  gate->op = op;
+  gate->value = value;
+  gate->defined = defined;
+  gate->label = label;
+  gate->fan_out = fan_out;
+  return gate;
+}
+
+/**
  * @brief Create a gate object
  * 
  * @param input1 
@@ -31,17 +55,11 @@ logic_gate create_gate(logic_gate input1, logic_gate input2, logic_op op, char *
   assert(input1 != NULL);
   assert(input2 != NULL);
   assert(op != NULL);
-  logic_gate gate = alloc_gate();
-  gate->input1 = input1;
-  gate->input2 = input2;
-  gate->op = op;
-  gate->defined = false;
-  gate->label = strdup(label);
-  gate->fan_out = 0;
-  assert(gate->label != NULL);
-  return gate;
+  char *label_dup = strdup(label);
+  assert(label_dup != NULL);
+  return make_gate(input1, input2, op, false, false, label_dup, 0);
 }
-// remove duplication
+
 /**
  * @brief Create an input object
  * 
@@ -50,16 +68,9 @@ logic_gate create_gate(logic_gate input1, logic_gate input2, logic_op op, char *
  * @return logic_input 
  */
 logic_input create_input(bool value, char *label) {
-  logic_gate gate = alloc_gate();
-  gate->input1 = NULL;
-  gate->input2 = NULL;
-  gate->op = NULL;
-  gate->value = value;
-  gate->defined = true;
-  gate->label = strdup(label);
-  gate->fan_out = 0;
-  assert(gate->label != NULL);
-  return gate;
+  char *label_dup = strdup(label);
+  assert(label_dup != NULL);
+  return make_gate(NULL, NULL, NULL, value, true, label_dup, 0);
 }
 
 /**
