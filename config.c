@@ -12,10 +12,10 @@
 #include "symboltable.h"
 #include "typedefs.h"
 
-#define INPUT_REGEX "(^I[[:alnum:]]+ [1|0]*$)"
-#define ALL_INPUT_REGEX "(^I[[:alnum:]]+$)"
-#define GIVEN_INPUT_REGEX "(^I[[:alnum:]]+ [1|0]$)"
-#define OUTPUT_REGEX "(^O[0-9]+ (AND|OR|NOT|XOR|NOR|NAND)[0-9]+)"
+#define INPUT_REGEX "(^IN-[[:alnum:]]+ [1|0]*$)"
+#define ALL_INPUT_REGEX "(^IN-[[:alnum:]]+$)"
+#define GIVEN_INPUT_REGEX "(^IN-[[:alnum:]]+ [1|0]$)"
+#define OUTPUT_REGEX "(^OUT-[[:alnum:]]+ (AND|OR|NOT|XOR|NOR|NAND)[0-9]+)"
 
 /**
  * @brief Removes leading and trailing whitespace from a string in place
@@ -95,14 +95,20 @@ static logic_input *parse_inputs(char **lines, int num_inputs, input_type itype)
   logic_input *inputs = malloc(sizeof(logic_input) * num_inputs);
   for (int i = 0; i < num_inputs; i++) {
     char *line = lines[i];
-    char *label = strtok(line, " ");
+    char *label;
     if (itype == ALL) {
+      assert(matches_regex(line, ALL_INPUT_REGEX));
+      label = strtok(line, " ");
+      label += 3; // miss out leading IN 
       inputs[i] = create_undef_input(label);
     } else {
+      assert(matches_regex(line, GIVEN_INPUT_REGEX));
+      label = strtok(line, " ");
+      label += 3;
       char *val = strtok(NULL, " ");
       inputs[i] = create_def_input(atoi(val), label);
-      add(inputs[i], label);
     }
+    add(inputs[i], label);
   }
   return inputs;
 }
@@ -160,6 +166,7 @@ static logic_output *parse_outputs(char **lines, int num_outputs) {
     char *gate_label = strtok(NULL, " ");
     logic_gate gate = lookup(gate_label);
     gate->fan_out++;
+    label += 4;
     outputs[i] = create_output(gate, label);
   }
   return outputs;
