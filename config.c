@@ -12,7 +12,9 @@
 #include "symboltable.h"
 #include "typedefs.h"
 
-#define INPUT_REGEX "(^I[0-9]+ [1|0]$)"
+#define INPUT_REGEX "(^I[[:alnum:]]+ [1|0]*$)"
+#define ALL_INPUT_REGEX "(^I[[:alnum:]]+$)"
+#define GIVEN_INPUT_REGEX "(^I[[:alnum:]]+ [1|0]$)"
 #define OUTPUT_REGEX "(^O[0-9]+ (AND|OR|NOT|XOR|NOR|NAND)[0-9]+)"
 
 /**
@@ -89,14 +91,18 @@ bool matches_regex(char *str, char *regex_exp) {
  * @param num_inputs 
  * @return logic_input* Array of logic_input gates
  */
-static logic_input *parse_inputs(char **lines, int num_inputs) {
+static logic_input *parse_inputs(char **lines, int num_inputs, input_type itype) {
   logic_input *inputs = malloc(sizeof(logic_input) * num_inputs);
   for (int i = 0; i < num_inputs; i++) {
     char *line = lines[i];
     char *label = strtok(line, " ");
-    char *val = strtok(NULL, " ");
-    inputs[i] = create_input(atoi(val), label);
-    add(inputs[i], label);
+    if (itype == ALL) {
+      inputs[i] = create_undef_input(label);
+    } else {
+      char *val = strtok(NULL, " ");
+      inputs[i] = create_def_input(atoi(val), label);
+      add(inputs[i], label);
+    }
   }
   return inputs;
 }
@@ -189,7 +195,7 @@ circuit read_config(char *filename, input_type itype) {
   }
   fclose(file);
 
-  logic_input *inputs = parse_inputs(lines, num_inputs);
+  logic_input *inputs = parse_inputs(lines, num_inputs, itype);
   parse_gates(lines + num_inputs, line_num - num_inputs - num_outputs);
   logic_output *outputs = parse_outputs(lines + line_num - num_outputs, num_outputs);
 

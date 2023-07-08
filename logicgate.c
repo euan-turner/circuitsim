@@ -61,16 +61,23 @@ logic_gate create_gate(logic_gate input1, logic_gate input2, logic_op op, char *
 }
 
 /**
- * @brief Create an input object
+ * @brief Create a defined input object
  * 
  * @param value 
  * @param label 
  * @return logic_input 
  */
-logic_input create_input(bool value, char *label) {
+logic_input create_def_input(bool value, char *label) {
   char *label_dup = strdup(label);
   assert(label_dup != NULL);
   return make_gate(NULL, NULL, NULL, value, true, label_dup, 0);
+}
+
+logic_input create_undef_input(char *label) {
+  char *label_dup = strdup(label);
+  assert(label_dup != NULL);
+  // default to true when undefined, doesn't matter
+  return make_gate(NULL, NULL, NULL, true, false, label_dup, 0);
 }
 
 /**
