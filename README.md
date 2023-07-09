@@ -44,4 +44,5 @@ Configurations should be written in a ```.txt``` file, where the relative path t
 
 The examples sub-directory is aptly named. So far it contains:
 
-- A 2-input multiplexer
+- A 2-input multiplexer with defined inputs
+- A 2-input multiplexer with undefined inputs
