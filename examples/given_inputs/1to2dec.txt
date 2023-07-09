@@ -1,0 +1,4 @@
+IN-a 1
+NOT1 a
+OUT-one NOT1
+OUT-two a
