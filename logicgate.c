@@ -80,6 +80,11 @@ logic_input create_undef_input(char *label) {
   return make_gate(NULL, NULL, NULL, true, false, label_dup, 0);
 }
 
+void def_input(logic_input input, bool value) {
+  input->value = value;
+  input->defined = true;
+}
+
 /**
  * @brief Create an output object
  * 

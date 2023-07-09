@@ -15,6 +15,8 @@ logic_input create_undef_input(char *label);
 
 logic_output create_output(logic_gate gate, char *label);
 
+void def_input(logic_input input, bool value);
+
 void free_gate(logic_gate gate);
 
 void free_output(logic_output output);
