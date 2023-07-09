@@ -1,0 +1,6 @@
+IN-a
+IN-b
+XOR1 a b
+AND1 a b
+OUT-sum XOR1
+OUT-carry AND1
