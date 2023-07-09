@@ -12,7 +12,7 @@
 #include "symboltable.h"
 #include "typedefs.h"
 
-#define INPUT_REGEX "(^IN-[[:alnum:]]+ [1|0]*$)"
+#define INPUT_REGEX "(^IN-[[:alnum:]]+( [1|0])*$)"
 #define ALL_INPUT_REGEX "(^IN-[[:alnum:]]+$)"
 #define GIVEN_INPUT_REGEX "(^IN-[[:alnum:]]+ [1|0]$)"
 #define OUTPUT_REGEX "(^OUT-[[:alnum:]]+ (AND|OR|NOT|XOR|NOR|NAND)[0-9]+)"
