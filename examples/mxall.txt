@@ -1,0 +1,8 @@
+IN-a
+IN-b
+IN-c
+NOT1 c
+AND1 a c
+AND2 b NOT1
+OR1 AND1 AND2
+OUT-r OR1
