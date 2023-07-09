@@ -6,8 +6,9 @@
 #include "logicgate.h"
 #include "typedefs.h"
 
-int main(void) {
-  circuit circ = read_config("./examples/mx.txt", GIVEN);
+int main(int argc, char *argv[]) {
+  char *filepath = argv[argc - 1];
+  circuit circ = read_config(filepath, GIVEN);
   printf("Read Complete\n");
   printf("Inputs:\n");
   for (int i = 0; i < circ->num_inputs; i++) {
