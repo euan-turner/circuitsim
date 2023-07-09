@@ -2,11 +2,12 @@
 
 ## Inputs
 
-Inputs are specified in the form ```I# [1|0]``` (POSIX regex is ```(^I[0-9]+ [1|0]$)```)
-For example, ```I1 1``` is the first input, of value 1, and ```I2 0``` is the second input of value 0.
+Inputs may either be given a defined value, or just marked as existing. (The GIVEN and ALL modes respectively).
+Given inputs are specified in the form ```I-label [1|0]``` (POSIX regex is ```(^IN-[[:alnum:]]+ [1|0]$)```)
+For example, ```IN-a 1``` is an input, of value 1, and ```IN-b 0``` is an input, of value 0.
+Otherwise, inputs are specified in the form ```I-label``` (POSIX regex is ```(^IN-[[:alnum:]]+$)```)
 
-To test a circuit on all possible combinations of inputs, inputs still need to be specified as ```I#```, but their value need not be defined.
-The ```-a``` flag will indicate the all possible inputs should be tested. These will then be enumerated in the output.
+If the ALL mode is to be used, the ```-a``` flag should be used from the command line. The filepath to the config file should always be last.
 
 ## Gates
 
@@ -19,7 +20,7 @@ The available gates to use are:
 - NOR
 - NAND
 
-Gates are specified in the form ```type# input1 input2``` (POSIX regex to match the gate type is ```(^(AND|OR|NOT|XOR|NOR|NAND)[0-9]+ )```)
+Gates are specified in the form ```type# input1 input2``` (POSIX regex to match the gate type is ```(^(AND|OR|NOT|XOR|NOR|NAND)[0-9]+)```)
 
 For example, ```AND1 I1 I2``` is the first AND gate, taking inputs from the first and second inputs to the circuit.
 ```OR1 AND1 I3``` is the first OR gate, taking inputs from the first AND gate and third input.
@@ -29,9 +30,9 @@ NOT gates only have one input, so can be written as ```NOT# input1```.
 
 Logic gates defined earlier in the configuration file can be marked as circuit outputs.
 
-Outputs are specified in the form ```O# gate``` (POSIX regex is ```(^O[0-9]+ (AND|OR|NOT|XOR|NOR|NAND)[0-9]+)```)
+Outputs are specified in the form ```O-label gate``` (POSIX regex for the initial output part is ```(^OUT-[[:alnum:]]+)```. Note that an input label may be used as the gate for an output if desired).
 
-For example, ```01 OR1``` marks the first OR gate as the first output of the circuit.
+For example, ```OUT-res OR1``` marks the first OR gate as the ```res``` output of the circuit.
 
 ## Layout
 
@@ -46,3 +47,6 @@ The examples sub-directory is aptly named. So far it contains:
 
 - A 2-input multiplexer with defined inputs
 - A 2-input multiplexer with undefined inputs
+- A 1-input decoder with defined inputs
+- A 1-input decoder with undefined inputs
+- A half-adder with undefined inputs
