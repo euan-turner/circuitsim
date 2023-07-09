@@ -3,6 +3,6 @@
 
 #include "typedefs.h"
 
-void eval_circuit(circuit circ);
+void eval_circuit(circuit circ, input_type itype);
 
 #endif /* EVALUATE_H */
