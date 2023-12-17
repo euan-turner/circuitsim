@@ -50,6 +50,9 @@ static void log_circuit(circuit circ) {
  * @pre All gate inputs have a defined value
  */
 static void eval_given_circuit(circuit circ) {
+  for (int i = 0; i < circ->num_inputs; i++) {
+    assert(circ->inputs[i]->defined);
+  }
   for (int i = 0; i < circ->num_outputs; i++) {
     eval_gate(circ->outputs[i]->gate);
   }
