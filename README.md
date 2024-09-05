@@ -1,5 +1,11 @@
 # Propositional Circuit Configuration Format
 
+This is a small side-project I worked on during my first year at Imperial College London.
+I started this for two reasons:
+
+  1. We had used a similar propositional circuit simulator in our first year Computer Systems module and I felt that it was quite clunky
+  2. I had just started learning C and wanted practice with dynamic allocation of some more complicated structures
+
 ## Inputs
 
 Inputs may either be given a defined value, or just marked as existing. (The GIVEN and ALL modes respectively).
